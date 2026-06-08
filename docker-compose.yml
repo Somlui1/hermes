@@ -7,8 +7,6 @@ services:
     container_name: hermes
     restart: unless-stopped
     command: gateway run
-    depends_on:
-      - ollama
     ports:
       - "8642:8642"
       - "9119:9119"
