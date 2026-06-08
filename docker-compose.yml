@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-
   hermes:
     image: nousresearch/hermes-agent:latest
     container_name: hermes
@@ -13,10 +12,18 @@ services:
     volumes:
       - ./.hermes:/opt/data
     shm_size: '1gb'
-    environment:
-      - HERMES_DASHBOARD=1
-      - HERMES_DASHBOARD_HOST=0.0.0.0
-      - HERMES_DASHBOARD_BASIC_AUTH_USERNAME=admin
-      - HERMES_DASHBOARD_BASIC_AUTH_PASSWORD=your_password_here
-      - HERMES_DASHBOARD_BASIC_AUTH_SECRET=random_secret_string_here
-      - HOME=/opt/data/home
+    env_file:
+      - .hermes/.env
+
+  # --- เพิ่มส่วนของ Ngrok ตรงนี้ ---
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: ngrok_tunnel
+    restart: unless-stopped
+    command:
+      - "http"
+      - "hermes:8642" # มุดท่อไปหา service ชื่อ hermes ที่พอร์ต 8642 โดยตรง
+    env_file:
+      - .hermes/.env
+    depends_on:
+      - hermes
