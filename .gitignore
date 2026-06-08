@@ -1,0 +1,16 @@
+# Ignore API keys and sensitive environment files
+.hermes/.env
+
+# Ignore local models inside ollama_data, but keep the directory via .gitkeep
+ollama_data/*
+!ollama_data/.gitkeep
+
+# Ignore tool workspace files in hermes home directory, but keep the directory via .gitkeep
+.hermes/home/*
+!.hermes/home/.gitkeep
+
+# OS specific files
+.DS_Store
+Thumbs.db
+*~
+*.log

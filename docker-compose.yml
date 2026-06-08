@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./ollama_data:/root/.ollama
+
+  hermes:
+    image: nousresearch/hermes-agent:latest
+    container_name: hermes
+    restart: unless-stopped
+    command: gateway run
+    depends_on:
+      - ollama
+    ports:
+      - "8642:8642"
+      - "9119:9119"
+    volumes:
+      - ./.hermes:/opt/data
+    shm_size: '1gb'
+    environment:
+      - HERMES_DASHBOARD=1
+      - HERMES_DASHBOARD_HOST=0.0.0.0
+      - HERMES_DASHBOARD_BASIC_AUTH_USERNAME=admin
+      - HERMES_DASHBOARD_BASIC_AUTH_PASSWORD=your_password_here
+      - HERMES_DASHBOARD_BASIC_AUTH_SECRET=random_secret_string_here
+      - HOME=/opt/data/home
